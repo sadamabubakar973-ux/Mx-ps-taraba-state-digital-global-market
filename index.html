@@ -5,47 +5,99 @@
   <title>MX PS TARABA STATE DIGITAL GLOBAL MARKET</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Link CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
   <h1>MX PS TARABA STATE DIGITAL GLOBAL MARKET</h1>
-<h2> pay with pi and sidra</h2> 
- <p>Marketplace na zamani</p>
+  <h2>Pay with Pi</h2>
+  <p>Modern Digital Marketplace</p>
 </header>
 
 <main class="container">
 
   <div class="card">
-    <h2>Barka da zuwa</h2>
+    <h2>Welcome</h2>
     <p>By Sadam Abubakar SD</p>
   </div>
 
   <div class="card">
     <h3>Categories</h3>
     <ul>
-      <li>SD UNIQUE BARBIN SALOON</li>
-      <li>Buhuna & Shanaye</li>
-      <li>Gidaje & Filaye</li>
-      <li>Akuyoyi & Kajuna</li>
-      <li>Mashuna & Kayan Wuta</li>
-      <li>da duk wani abin more rayuwa nazamani</li>
-      <li>Dressing Room & Fashion Designer</li>
+      <li>Barbing Saloon</li>
+      <li>Cattle & Livestock</li>
+      <li>Houses & Lands</li>
+      <li>Goats & Poultry</li>
+      <li>Machines & Electrical Tools</li>
+      <li>Fashion Design</li>
+      <li>All Modern Lifestyle Products</li>
     </ul>
   </div>
 
-  <button id="startBtn">Fara Amfani</button>
+  <button onclick="loginWithPi()">Login with Pi</button>
+  <button onclick="payWithPi()">Pay with Pi</button>
 
 </main>
 
-<!-- Link JS -->
-<script src="script.js"></script>
-
-
-<h1 style="color:green;">Hello</h1>
-<p style="color:blue;"> barkanku dawarhaka lady and gentle men muna muku maraba dazuwa kasuwan duniya>
+<p style="color:blue;">
+Welcome ladies and gentlemen, we are happy to welcome you to the global marketplace.
 </p>
+
+<!-- PI SDK -->
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
+<script>
+Pi.init({
+  version: "2.0",
+  sandbox: true
+});
+
+// LOGIN WITH PI
+async function loginWithPi() {
+  try {
+    const scopes = ['username', 'payments'];
+
+    const auth = await Pi.authenticate(scopes);
+
+    alert("Welcome " + auth.user.username);
+
+  } catch (err) {
+    console.error(err);
+    alert("Login failed");
+  }
+}
+
+// PAY WITH PI
+async function payWithPi() {
+  try {
+    await Pi.createPayment(
+      {
+        amount: 1,
+        memo: "Taraba Market Payment",
+        metadata: { orderId: 1 }
+      },
+      {
+        onReadyForServerApproval: function(paymentId) {
+          console.log(paymentId);
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          console.log(txid);
+          alert("Payment Successful");
+        },
+        onCancel: function(paymentId) {
+          alert("Payment Cancelled");
+        },
+        onError: function(error) {
+          console.error(error);
+        }
+      }
+    );
+  } catch (err) {
+    console.error(err);
+  }
+}
+</script>
+
 </body>
 </html>
